@@ -34,4 +34,4 @@ interface Favorites {
   tracks: string[]; // favorite tracks ids
 }
 
-export { User, Artist };
+export { User, Artist, Track, Album, Favorites };
