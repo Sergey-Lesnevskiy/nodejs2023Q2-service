@@ -4,14 +4,18 @@ import { CreateArtistDto } from './dto/create-artist.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 
+const artists: Artist[] = [];
 @Injectable()
 export class ArtistService {
-  private artists: Artist[] = [];
   getArtists() {
-    return this.artists;
+    return artists;
+  }
+  checkArtistById(id: string) {
+    const artist = artists.find((artist) => artist.id === id);
+    return artist;
   }
   getArtistById(id: string): Artist {
-    const artist = this.artists.find((artist) => artist.id === id);
+    const artist = artists.find((artist) => artist.id === id);
     if (!artist) {
       throw new NotFoundException('User not found');
     }
@@ -22,7 +26,7 @@ export class ArtistService {
       id: uuidv4(),
       ...createArtistDto,
     };
-    this.artists.push(newArtist);
+    artists.push(newArtist);
     return newArtist;
   }
   updateArtist(updateArtistDto: UpdateArtistDto, id: string) {
@@ -35,12 +39,12 @@ export class ArtistService {
       ...artist,
       ...updateArtistDto,
     };
-    this.artists[artistIdx] = updateArtist;
+    artists[artistIdx] = updateArtist;
     return updateArtist;
   }
 
   getArtistIdx(id: string): number {
-    const artistIdx = this.artists.findIndex((artist) => id === artist.id);
+    const artistIdx = artists.findIndex((artist) => id === artist.id);
     if (artistIdx != -1) {
       return artistIdx;
     }
@@ -49,6 +53,6 @@ export class ArtistService {
 
   deleteArtist(id: string) {
     const user = this.getArtistIdx(id);
-    this.artists.splice(user, 1);
+    artists.splice(user, 1);
   }
 }

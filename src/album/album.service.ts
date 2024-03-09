@@ -4,17 +4,21 @@ import { v4 as uuidv4 } from 'uuid';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 
+const albums: Album[] = [];
 @Injectable()
 export class AlbumService {
-  private albums: Album[] = [];
   getAlbums() {
-    return this.albums;
+    return albums;
   }
   getAlbumById(id: string): Album {
-    const album = this.albums.find((album) => album.id === id);
+    const album = albums.find((album) => album.id === id);
     if (!album) {
       throw new NotFoundException('Album not found');
     }
+    return album;
+  }
+  checkAlbumById(id: string): Album {
+    const album = albums.find((album) => album.id === id);
     return album;
   }
   createAlbum(createAlbumDto: CreateAlbumDto) {
@@ -22,7 +26,7 @@ export class AlbumService {
       id: uuidv4(),
       ...createAlbumDto,
     };
-    this.albums.push(newAlbum);
+    albums.push(newAlbum);
     return newAlbum;
   }
   updateAlbum(updateAlbumDto: UpdateAlbumDto, id: string) {
@@ -35,12 +39,12 @@ export class AlbumService {
       ...album,
       ...updateAlbumDto,
     };
-    this.albums[albumIdx] = updateAlbum;
+    albums[albumIdx] = updateAlbum;
     return updateAlbum;
   }
 
   getAlbumIdx(id: string): number {
-    const albumIdx = this.albums.findIndex((album) => id === album.id);
+    const albumIdx = albums.findIndex((album) => id === album.id);
     if (albumIdx != -1) {
       return albumIdx;
     }
@@ -49,6 +53,6 @@ export class AlbumService {
 
   deleteAlbum(id: string) {
     const album = this.getAlbumIdx(id);
-    this.albums.splice(album, 1);
+    albums.splice(album, 1);
   }
 }
