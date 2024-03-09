@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { User } from '../inteface/interface';
+import { User } from '../interface/interface';
 import { CreateUserDto } from './dto/create-user.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { UpdateUserDto } from './dto/update-user.dto';
