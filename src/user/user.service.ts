@@ -7,15 +7,15 @@ import { User } from '../interface/interface';
 import { CreateUserDto } from './dto/create-user.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { UpdateUserDto } from './dto/update-user.dto';
-
+import { mockUsers } from 'src/db/db';
 @Injectable()
 export class UserService {
-  private users: User[] = [];
+  // private users: User[] = [];
   getUsers() {
-    return this.users;
+    return mockUsers;
   }
   getUserById(id: string): User {
-    const user = this.users.find((user) => user.id === id);
+    const user = mockUsers.find((user) => user.id === id);
     if (!user) {
       throw new NotFoundException('User not found');
     }
@@ -29,7 +29,7 @@ export class UserService {
       updatedAt: Date.now(),
       ...createUserDto,
     };
-    this.users.push(newUser);
+    mockUsers.push(newUser);
     const newUserNoPassword = Object.assign({}, newUser);
     delete newUserNoPassword.password;
     return newUserNoPassword;
@@ -52,14 +52,14 @@ export class UserService {
       version: user.version + 1,
       updatedAt: Date.now(),
     };
-    this.users[userIdx] = result;
+    mockUsers[userIdx] = result;
     const resultNoPassword = Object.assign({}, result);
     delete resultNoPassword.password;
     return resultNoPassword;
   }
 
   getUserIdx(id: string): number {
-    const userIdx = this.users.findIndex((user) => id === user.id);
+    const userIdx = mockUsers.findIndex((user) => id === user.id);
     if (userIdx != -1) {
       return userIdx;
     }
@@ -68,6 +68,6 @@ export class UserService {
 
   deleteUser(id: string) {
     const user = this.getUserIdx(id);
-    this.users.splice(user, 1);
+    mockUsers.splice(user, 1);
   }
 }

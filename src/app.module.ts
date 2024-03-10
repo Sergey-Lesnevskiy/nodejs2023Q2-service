@@ -9,7 +9,7 @@ import { FavsModule } from './fav/fav.module';
 
 @Module({
   imports: [UserModule, ArtistModule, TrackModule, AlbumModule, FavsModule],
-  controllers: [AppController],
-  providers: [AppService],
+  // controllers: [AppController],
+  // providers: [AppService],
 })
 export class AppModule {}

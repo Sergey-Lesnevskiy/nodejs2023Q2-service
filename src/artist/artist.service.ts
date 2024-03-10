@@ -3,19 +3,26 @@ import { Artist } from '../interface/interface';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { UpdateArtistDto } from './dto/update-artist.dto';
+import { TrackService } from 'src/track/track.service';
+import { AlbumService } from 'src/album/album.service';
+import { mockArtists } from 'src/db/db';
 
-const artists: Artist[] = [];
+// const artists: Artist[] = [];
 @Injectable()
 export class ArtistService {
+  constructor(
+    private readonly trackService: TrackService,
+    private readonly albumService: AlbumService,
+  ) {}
   getArtists() {
-    return artists;
+    return mockArtists;
   }
   checkArtistById(id: string) {
-    const artist = artists.find((artist) => artist.id === id);
+    const artist = mockArtists.find((artist) => artist.id === id);
     return artist;
   }
   getArtistById(id: string): Artist {
-    const artist = artists.find((artist) => artist.id === id);
+    const artist = mockArtists.find((artist) => artist.id === id);
     if (!artist) {
       throw new NotFoundException('User not found');
     }
@@ -26,7 +33,7 @@ export class ArtistService {
       id: uuidv4(),
       ...createArtistDto,
     };
-    artists.push(newArtist);
+    mockArtists.push(newArtist);
     return newArtist;
   }
   updateArtist(updateArtistDto: UpdateArtistDto, id: string) {
@@ -39,12 +46,12 @@ export class ArtistService {
       ...artist,
       ...updateArtistDto,
     };
-    artists[artistIdx] = updateArtist;
+    mockArtists[artistIdx] = updateArtist;
     return updateArtist;
   }
 
   getArtistIdx(id: string): number {
-    const artistIdx = artists.findIndex((artist) => id === artist.id);
+    const artistIdx = mockArtists.findIndex((artist) => id === artist.id);
     if (artistIdx != -1) {
       return artistIdx;
     }
@@ -53,6 +60,8 @@ export class ArtistService {
 
   deleteArtist(id: string) {
     const user = this.getArtistIdx(id);
-    artists.splice(user, 1);
+    mockArtists.splice(user, 1);
+    this.albumService.deleteArtist(id);
+    this.trackService.deleteArtist(id);
   }
 }

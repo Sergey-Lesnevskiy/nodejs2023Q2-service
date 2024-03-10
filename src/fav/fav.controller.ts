@@ -15,13 +15,11 @@ import { FavsService } from './fav.service';
 export class FavsController {
   constructor(private readonly favsService: FavsService) {}
   @Get()
-  @HttpCode(200)
   getAll() {
     return this.favsService.getAll();
   }
 
   @Post('track/:id')
-  @HttpCode(201)
   addTrackToFavs(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.favsService.addTrackToFavs(id);
   }
@@ -33,7 +31,6 @@ export class FavsController {
   }
 
   @Post('album/:id')
-  @HttpCode(201)
   addAlbumToFavs(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.favsService.addAlbumToFavs(id);
   }
@@ -45,7 +42,6 @@ export class FavsController {
   }
 
   @Post('artist/:id')
-  @HttpCode(201)
   addArtistToFavs(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
   ) {

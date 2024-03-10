@@ -3,18 +3,24 @@ import { Track } from 'src/interface/interface';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { UpdateTrackDto } from './dto/update-track.dto';
-const tracks: Track[] = [];
+import { mockTracks } from 'src/db/db';
+// const tracks: Track[] = [];
 
 @Injectable()
 export class TrackService {
   getTracks() {
-    return tracks;
+    return mockTracks;
   }
   getTrackById(id: string): Track {
-    const track = tracks.find((track) => track.id === id);
+    const track = mockTracks.find((track) => track.id === id);
     if (!track) {
       throw new NotFoundException('Track not found');
     }
+    return track;
+  }
+
+  checkTrackById(id: string): Track {
+    const track = mockTracks.find((track) => track.id === id);
     return track;
   }
   createTrack(createTrackDto: CreateTrackDto) {
@@ -22,7 +28,7 @@ export class TrackService {
       id: uuidv4(),
       ...createTrackDto,
     };
-    tracks.push(newTrack);
+    mockTracks.push(newTrack);
     return newTrack;
   }
   updateTrack(UpdateTrackDto: UpdateTrackDto, id: string) {
@@ -35,24 +41,36 @@ export class TrackService {
       ...track,
       ...UpdateTrackDto,
     };
-    tracks[trackIdx] = updateTrack;
+    mockTracks[trackIdx] = updateTrack;
     return updateTrack;
   }
 
   getTrackIdx(id: string): number {
-    const trackIdx = tracks.findIndex((artist) => id === artist.id);
+    const trackIdx = mockTracks.findIndex((artist) => id === artist.id);
     if (trackIdx != -1) {
       return trackIdx;
     }
     throw new NotFoundException('Track not found');
   }
 
-  checkTrackById(id: string): Track {
-    const track = tracks.find((track) => track.id === id);
-    return track;
-  }
   deleteTrack(id: string) {
     const user = this.getTrackIdx(id);
-    tracks.splice(user, 1);
+    mockTracks.splice(user, 1);
+  }
+
+  deleteAlbum(id) {
+    mockTracks.map((track) => {
+      if (id === track.albumId) {
+        track.albumId = null;
+      }
+    });
+  }
+
+  deleteArtist(id) {
+    mockTracks.map((track) => {
+      if (id === track.artistId) {
+        track.artistId = null;
+      }
+    });
   }
 }

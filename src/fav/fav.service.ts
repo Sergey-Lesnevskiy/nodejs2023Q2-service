@@ -2,13 +2,14 @@ import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { AlbumService } from 'src/album/album.service';
 import { TrackService } from 'src/track/track.service';
 import { ArtistService } from 'src/artist/artist.service';
-import { Track } from 'src/interface/interface';
+import { FavoritesResponse } from 'src/interface/interface';
+import { mockFavorites } from 'src/db/db';
 
-const db = {
-  artists: [],
-  albums: [],
-  tracks: [],
-};
+// const db = {
+//   artists: [],
+//   albums: [],
+//   tracks: [],
+// };
 
 @Injectable()
 export class FavsService {
@@ -18,14 +19,31 @@ export class FavsService {
     private readonly albumService: AlbumService,
   ) {}
 
-  getAll() {
-    return db;
+  getAll(): FavoritesResponse {
+    const favoritesResponse: FavoritesResponse = {
+      albums: [],
+      artists: [],
+      tracks: [],
+    };
+    mockFavorites.albums.forEach((album) => {
+      const findAlbum = this.albumService.checkAlbumById(album);
+      if (findAlbum) favoritesResponse.albums.push(findAlbum);
+    });
+    mockFavorites.tracks.forEach((track) => {
+      const findTrack = this.trackService.checkTrackById(track);
+      if (findTrack) favoritesResponse.tracks.push(findTrack);
+    });
+    mockFavorites.artists.forEach((artist) => {
+      const findArtist = this.artistService.checkArtistById(artist);
+      if (findArtist) favoritesResponse.artists.push(findArtist);
+    });
+    return favoritesResponse;
   }
-  addTrackToFavs(id: string): Track {
+
+  addTrackToFavs(id: string) {
     const track = this.trackService.checkTrackById(id);
     if (track) {
-      db.tracks.push(track);
-      return track;
+      mockFavorites.tracks.push(id);
     } else {
       throw new UnprocessableEntityException();
     }
@@ -34,8 +52,8 @@ export class FavsService {
   deleteTrackFromFavs(id: string) {
     const track = this.trackService.checkTrackById(id);
     if (track) {
-      db.tracks = db.tracks.filter((track) => {
-        return track.id !== id;
+      mockFavorites.tracks = mockFavorites.tracks.filter((track) => {
+        return track !== id;
       });
     } else {
       throw new UnprocessableEntityException();
@@ -44,8 +62,7 @@ export class FavsService {
   addAlbumToFavs(id: string) {
     const album = this.albumService.checkAlbumById(id);
     if (album) {
-      db.albums.push(album);
-      return album;
+      mockFavorites.albums.push(id);
     } else {
       throw new UnprocessableEntityException();
     }
@@ -53,8 +70,8 @@ export class FavsService {
   deleteAlbumFromFavs(id: string) {
     const album = this.albumService.checkAlbumById(id);
     if (album) {
-      db.albums = db.albums.filter((album) => {
-        return album.id !== id;
+      mockFavorites.albums = mockFavorites.albums.filter((album) => {
+        return album !== id;
       });
     } else {
       throw new UnprocessableEntityException();
@@ -63,8 +80,7 @@ export class FavsService {
   addArtistToFavs(id: string) {
     const artist = this.artistService.checkArtistById(id);
     if (artist) {
-      db.artists.push(artist);
-      return artist;
+      mockFavorites.artists.push(id);
     } else {
       throw new UnprocessableEntityException();
     }
@@ -72,11 +88,18 @@ export class FavsService {
   deleteArtistFromFavs(id: string) {
     const artist = this.artistService.checkArtistById(id);
     if (artist) {
-      db.artists = db.artists.filter((artist) => {
-        return artist.id !== id;
+      mockFavorites.artists = mockFavorites.artists.filter((artist) => {
+        return artist !== id;
       });
     } else {
       throw new UnprocessableEntityException();
     }
   }
+
+  // deleteAlbum(id: string) {
+  //   const albumIdx = mockFavorites.albums.findIndex((album) => id === album.id);
+  //   if (albumIdx !== -1) {
+  //     return albumIdx;
+  //   }
+  // }
 }

@@ -6,6 +6,10 @@ interface User {
   createdAt: number; // timestamp of creation
   updatedAt: number; // timestamp of last update
 }
+interface CreateUserDto {
+  login: string;
+  password: string;
+}
 
 interface Artist {
   id: string; // uuid v4
@@ -40,4 +44,12 @@ interface FavoritesResponse {
   tracks: Track[];
 }
 
-export { User, Artist, Track, Album, Favorites, FavoritesResponse };
+export {
+  User,
+  Artist,
+  Track,
+  Album,
+  Favorites,
+  FavoritesResponse,
+  CreateUserDto,
+};
