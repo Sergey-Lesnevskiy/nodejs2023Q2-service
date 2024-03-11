@@ -5,12 +5,6 @@ import { ArtistService } from 'src/artist/artist.service';
 import { FavoritesResponse } from 'src/interface/interface';
 import { mockFavorites } from 'src/db/db';
 
-// const db = {
-//   artists: [],
-//   albums: [],
-//   tracks: [],
-// };
-
 @Injectable()
 export class FavsService {
   constructor(

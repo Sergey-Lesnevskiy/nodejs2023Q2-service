@@ -10,7 +10,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { mockUsers } from 'src/db/db';
 @Injectable()
 export class UserService {
-  // private users: User[] = [];
   getUsers() {
     return mockUsers;
   }

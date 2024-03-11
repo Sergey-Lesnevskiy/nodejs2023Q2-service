@@ -4,7 +4,6 @@ import { CreateTrackDto } from './dto/create-track.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { mockTracks } from 'src/db/db';
-// const tracks: Track[] = [];
 
 @Injectable()
 export class TrackService {
